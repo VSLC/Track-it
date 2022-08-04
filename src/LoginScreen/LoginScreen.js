@@ -5,13 +5,14 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import UserContext from "../Context/UserContext";
 
 const LoginScreen = () => {
+  const [token, setToken] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [enable, setEnable] = useState(true);
   const navigate = useNavigate();
-  console.log(email, password, enable);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -28,7 +29,8 @@ const LoginScreen = () => {
 
     promise.then((response) => {
       console.log(response.data);
-      navigate("/habitos");
+      setToken(response.data.token);
+      navigate("/hoje");
     });
     promise.catch((error) => {
       setEnable(true);
@@ -39,64 +41,73 @@ const LoginScreen = () => {
 
   const Loading = () => {
     if (enable) {
-      return <Button enable={enable} onClick={handleLogin}>Entrar</Button>;
+      return (
+        <Button enable={enable} onClick={handleLogin}>
+          Entrar
+        </Button>
+      );
     } else {
       return (
-      <Button enable={enable} disabled><ThreeDots height="15px" width="60px" color="#FFFFFF" /></Button>
-      )
-  }}
+        <Button enable={enable} disabled>
+          <ThreeDots height="15px" width="60px" color="#FFFFFF" />
+        </Button>
+      );
+    }
+  };
 
   return (
     <>
-      <Container>
-        <Img src={logo} alt="logo" />
-        <Form>
-          {enable ? (
-            <Input
-              enable={enable}
-              type={email}
-              placeholder="email"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-            />
-          ) : (
-            <Input
-              enable={enable}
-              type={email}
-              placeholder="email"
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              disabled
-            />
-          )}
-          {enable ? (
-            <Input
-              enable={enable}
-              type="password"
-              placeholder="senha"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-            />
-          ) : (
-            <Input
-              enable={enable}
-              type="password"
-              placeholder="senha"
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
-              disabled
-            />
-          )}
-          <Loading />
-        </Form>
-        <Link to="/cadastro">
-          <Register>Não tem uma conta? Cadastre-se!</Register>
-        </Link>
-      </Container>
+      <UserContext.Provider value = {{token}}>
+        <Container>
+          <Img src={logo} />
+          <Form>
+            {enable ? (
+              <Input
+                enable={enable}
+                type={email}
+                placeholder="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+              />
+            ) : (
+              <Input
+                enable={enable}
+                type={email}
+                placeholder="email"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                }}
+                disabled
+              />
+            )}
+            {enable ? (
+              <Input
+                enable={enable}
+                type="password"
+                placeholder="senha"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+              />
+            ) : (
+              <Input
+                enable={enable}
+                type="password"
+                placeholder="senha"
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                }}
+                disabled
+              />
+            )}
+            <Loading />
+          </Form>
+          <Link to="/cadastro">
+            <Register>Não tem uma conta? Cadastre-se!</Register>
+          </Link>
+        </Container>
+      </UserContext.Provider>
     </>
   );
 };
@@ -139,12 +150,11 @@ const Input = styled.input`
 `;
 
 const Button = styled.a`
-
   display: flex;
-  justify-content:center;
+  justify-content: center;
   border-radius: 5px;
   background-color: #52b6ff;
-  opacity: ${(props) => props.enable ? 1:0.7};
+  opacity: ${(props) => (props.enable ? 1 : 0.7)};
   color: #fff;
   font-weight: 400;
   font-size: 20px;

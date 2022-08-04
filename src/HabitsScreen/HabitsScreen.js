@@ -2,10 +2,14 @@ import styled from "styled-components";
 import Trackitlogo from "../Assets/trackitlogo.png";
 import personalPhoto from "../Assets/personalimage.png";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import UserContext from "../Context/UserContext";
 
 const HabitsScreen = () => {
   const [createHabit, setCreateHabit] = useState(false);
+  const {token} = useContext(UserContext);
+  console.log(token)
+
   const showCreateHabit = () => {
     setCreateHabit(true);
   };
@@ -16,14 +20,14 @@ const HabitsScreen = () => {
     <>
       <Container>
         <Header>
-          <img src={Trackitlogo} alt="trackit logo" />
-          <img src={personalPhoto} alt="personal image" />
+          <img src={Trackitlogo} />
+          <img src={personalPhoto} />
         </Header>
         <Main>
           <MyHabits>
             <p> Meus Hábitos</p>
-            <div>
-              <ion-icon name="add-outline" onClick={showCreateHabit}></ion-icon>
+            <div onClick={showCreateHabit}>
+              <ion-icon name="add-outline"></ion-icon>
             </div>
           </MyHabits>
           {createHabit ? (
