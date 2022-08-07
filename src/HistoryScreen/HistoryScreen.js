@@ -1,32 +1,51 @@
 import Trackitlogo from "../Assets/trackitlogo.png";
-import personalPhoto from "../Assets/personalimage.png";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
 
 const HistoryScreen = () => {
+  const image = localStorage.getItem("image");
+  const percentage = localStorage.getItem("percentage");
+  console.log(image);
   return (
     <>
       <Container>
         <Header>
-          <img src={Trackitlogo}  />
-          <img src={personalPhoto} />
+          <img src={Trackitlogo} />
+          <img className="personalImage" src={image} />
         </Header>
         <Main>
           <h2>Histórico</h2>
           <p>Em breve você poderá ver o histórico dos seus hábitos aqui!</p>
         </Main>
         <Footer>
-          <Link to="/habitos">
-            <Paragraph2>Hábitos</Paragraph2>
-          </Link>
-          <Link to="/hoje">
-            <ProgressBar>
-              <p>Hoje</p>
-            </ProgressBar>
-          </Link>
-          <Link to="/historico">
-            <Paragraph2>Histórico</Paragraph2>
-          </Link>
+          <div>
+            <Link to="/habitos">
+              <Paragraph2>Hábitos</Paragraph2>
+            </Link>
+            <Link to="/hoje">
+              <div className="progressBar" style={{ width: 100, height: 100 }}>
+                <CircularProgressbar
+                  color="white"
+                  text="Hoje"
+                  value={percentage}
+                  background
+                  backgroundPadding={6}
+                  styles={buildStyles({
+                    pathTransitionDuration: 0.5,
+                    pathColor: "#fff",
+                    textColor: "#fff",
+                    trailColor: "transparent",
+                    backgroundColor: "#52B6FF",
+                  })}
+                />
+              </div>
+            </Link>
+            <Link to="/historico">
+              <Paragraph2>Histórico</Paragraph2>
+            </Link>
+          </div>
         </Footer>
       </Container>
     </>
@@ -70,13 +89,17 @@ const Header = styled.div`
     img {
       padding: 0 20px;
     }
+    .personalImage {
+      width: 80px;
+      height: 60px;
+      border-radius: 100px;
+    }
   }
 `;
-
-const Footer = styled.footer`
+const Footer = styled.div`
   @media (max-width: 600px) {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     position: fixed;
     bottom: 0;
@@ -85,22 +108,20 @@ const Footer = styled.footer`
     height: 70px;
     background-color: #fff;
     color: #52b6ff;
+
+    div {
+      width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .progressBar {
+      margin-bottom: 50px;
+    }
   }
 `;
 
 const Paragraph2 = styled.a`
   display: inline-block;
   color: #52b6ff;
-`;
-
-const ProgressBar = styled.div`
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 25px;
-  left: 150px;
-  padding: 20px;
-  border-radius: 50%;
-  background-color: #52b6ff;
-  color: #fff;
 `;

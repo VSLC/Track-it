@@ -1,14 +1,26 @@
 import styled from "styled-components";
 import Trackitlogo from "../Assets/trackitlogo.png";
-import personalPhoto from "../Assets/personalimage.png";
+import { ThreeDots } from "react-loader-spinner";
 import { Link } from "react-router-dom";
-import { useContext, useState } from "react";
-import UserContext from "../Context/UserContext";
+import { useState, useEffect, useContext } from "react";
+import UserContext from "../contexts/ContextUser";
+import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
+import axios from "axios";
 
 const HabitsScreen = () => {
+  const days = ["D", "S", "T", "Q", "Q", "S", "S"];
+  const { token2 } = useContext(UserContext);
+
   const [createHabit, setCreateHabit] = useState(false);
-  const {token} = useContext(UserContext);
-  console.log(token)
+  const [text, setText] = useState(false);
+  const [habit, setHabit] = useState("");
+  const [enable, setEnable] = useState(true);
+  const [newHabits, setNewHabits] = useState([]);
+  const token = localStorage.getItem("token");
+  const image = localStorage.getItem("image");
+  const percentage = localStorage.getItem("percentage");
 
   const showCreateHabit = () => {
     setCreateHabit(true);
@@ -16,12 +28,143 @@ const HabitsScreen = () => {
   const hideCreateHabit = () => {
     setCreateHabit(false);
   };
+
+  const saveDay = () => {
+    console.log("Save day!");
+  };
+
+  const UserHabit = ({ name, id }) => {
+    return (
+      <>
+        <Habits>
+          <p>{name}</p>
+          <Days>
+            {days.map((element) => (
+              <button onClick={saveDay}>{element}</button>
+            ))}
+          </Days>
+          <ion-icon
+            name="trash-outline"
+            onClick={() => {
+              deleteHabit(id);
+              loadData();
+            }}
+          ></ion-icon>
+        </Habits>
+      </>
+    );
+  };
+
+  const loadData = () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+
+    const promise = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      config
+    );
+    promise.then((response) => {
+      console.log("Recarregou");
+    });
+  };
+
+  const handleHabit = (e) => {
+    e.preventDefault();
+    setEnable(false);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const object = {
+      name: habit,
+      days: [0, 1, 2, 3, 4, 5, 6],
+    };
+    const promise = axios.post(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      object,
+      config
+    );
+    promise.then((response) => {
+      setEnable(true);
+      console.log(response.data);
+      setCreateHabit(false);
+    });
+    promise.catch((error) => {
+      setEnable(true);
+      alert("Erro ao criar o hábito ." + error);
+    });
+  };
+
+  const getHabits = () => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    const promise = axios.get(
+      "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
+      config
+    );
+    promise.then((response) => {
+      setNewHabits(response.data);
+    });
+
+    if (newHabits.length === 0) {
+      setText(true);
+    } else {
+      setText(false);
+    }
+  };
+
+  useEffect(getHabits, [newHabits]);
+
+  const deleteHabit = (id) => {
+    const config = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    };
+    if (window.confirm("Deseja deletar o hábito ?")) {
+      const promise = axios.delete(
+        `https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits/${id}`,
+        config
+      );
+      promise.catch((error) => {
+        alert("Erro ao deletar hábito. Tente novamente");
+      });
+    }
+  };
+
+  const Loading = () => {
+    if (enable) {
+      return (
+        <ButtonSave
+          enable={enable}
+          className="button-save"
+          onClick={handleHabit}
+        >
+          Salvar
+        </ButtonSave>
+      );
+    } else {
+      return (
+        <ButtonSave enable={enable} disabled>
+          <ThreeDots height="15px" width="60px" color="#FFFFFF" />
+        </ButtonSave>
+      );
+    }
+  };
+  console.log(newHabits);
   return (
     <>
       <Container>
         <Header>
           <img src={Trackitlogo} />
-          <img src={personalPhoto} />
+          <img className="personalImage" src={image} />
         </Header>
         <Main>
           <MyHabits>
@@ -32,83 +175,99 @@ const HabitsScreen = () => {
           </MyHabits>
           {createHabit ? (
             <CreateHabits>
-              <input type="text" placeholder=" nome do hábito" />
+              {enable ? (
+                <Input
+                  value={habit}
+                  enable={enable}
+                  type="text"
+                  placeholder=" nome do hábito"
+                  onChange={(e) => {
+                    setHabit(e.target.value);
+                  }}
+                />
+              ) : (
+                <Input
+                  value={habit}
+                  enable={enable}
+                  type="text"
+                  placeholder=" nome do hábito"
+                  onChange={(e) => {
+                    setHabit(e.target.value);
+                  }}
+                  disabled
+                />
+              )}
+
               <Days>
-                <div>S</div>
-                <div>T</div>
-                <div>Q</div>
-                <div>Q</div>
-                <div>S</div>
-                <div>S</div>
-                <div>D</div>
+                {days.map((element) => (
+                  <button onClick={saveDay}>{element}</button>
+                ))}
               </Days>
               <Buttons>
-                <button className="button-cancel" onClick={hideCreateHabit}>
-                  Cancelar
-                </button>
-                <button className="button-save">Salvar</button>
+                {enable ? (
+                  <ButtonCancel
+                    enable={enable}
+                    className="button-cancel"
+                    onClick={hideCreateHabit}
+                  >
+                    Cancelar
+                  </ButtonCancel>
+                ) : (
+                  <ButtonCancel
+                    enable={enable}
+                    className="button-cancel"
+                    onClick={hideCreateHabit}
+                    disabled
+                  >
+                    Cancelar
+                  </ButtonCancel>
+                )}
+                <Loading />
               </Buttons>
             </CreateHabits>
           ) : (
             ""
           )}
-          <Habits>
-            <p>Ler 1 capítulo de livro</p>
-            <Days>
-              <div>S</div>
-              <div>T</div>
-              <div>Q</div>
-              <div>Q</div>
-              <div>S</div>
-              <div>S</div>
-              <div>D</div>
-            </Days>
-            <ion-icon name="trash-outline"></ion-icon>
-          </Habits>
-          <Habits>
-            <p>Ler 1 capítulo de livro</p>
-            <Days>
-              <div>S</div>
-              <div>T</div>
-              <div>Q</div>
-              <div>Q</div>
-              <div>S</div>
-              <div>S</div>
-              <div>D</div>
-            </Days>
-            <ion-icon name="trash-outline"></ion-icon>
-          </Habits>
-          <Habits>
-            <p>Ler 1 capítulo de livro</p>
-            <Days>
-              <div>S</div>
-              <div>T</div>
-              <div>Q</div>
-              <div>Q</div>
-              <div>S</div>
-              <div>S</div>
-              <div>D</div>
-            </Days>
-            <ion-icon name="trash-outline"></ion-icon>
-          </Habits>
 
-          <Paragraph>
-            Você não tem nenhum hábito <br /> cadastrado ainda. Adicione um
-            hábito <br /> para começar a trackear!
-          </Paragraph>
+          {newHabits.map((habit) => {
+            return <UserHabit name={habit.name} id={habit.id} />;
+          })}
+          {text ? (
+            <Paragraph>
+              Você não tem nenhum hábito <br /> cadastrado ainda. Adicione um
+              hábito <br /> para começar a trackear!
+            </Paragraph>
+          ) : (
+            ""
+          )}
         </Main>
         <Footer>
-          <Link to="/habitos">
-            <Paragraph2>Hábitos</Paragraph2>
-          </Link>
-          <Link to="/hoje">
-            <ProgressBar>
-              <p>Hoje</p>
-            </ProgressBar>
-          </Link>
-          <Link to="/historico">
-            <Paragraph2>Histórico</Paragraph2>
-          </Link>
+          <div>
+            <Link to="/habitos">
+              <Paragraph2>Hábitos</Paragraph2>
+            </Link>
+            <Link to="/hoje">
+              <div className="progressBar" style={{ width: 100, height: 100 }}>
+                <CircularProgressbar
+                  color="white"
+                  text="Hoje"
+                  background
+                  value={percentage}
+                  backgroundPadding={6}
+                  styles={buildStyles({
+                    pathTransitionDuration: 0.5,
+                    pathColor: "#fff",
+                    textColor: "#fff",
+                    trailColor: "transparent",
+                    backgroundColor: "#52B6FF",
+                  })}
+                />
+              </div>
+            </Link>
+            <Link to="/historico">
+              <Paragraph2>Histórico</Paragraph2>
+            </Link>
+          </div>
         </Footer>
       </Container>
     </>
@@ -143,6 +302,12 @@ const Header = styled.div`
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
     img {
       padding: 0 20px;
+    }
+
+    .personalImage {
+      width: 80px;
+      height: 60px;
+      border-radius: 100px;
     }
   }
 `;
@@ -181,7 +346,6 @@ const Main = styled.main`
 `;
 
 const Paragraph = styled.p`
-  display: none;
   text-align: left;
   padding: 0 20px;
 `;
@@ -192,11 +356,12 @@ const Days = styled.div`
   justify-content: flex-start;
   margin-top: 10px;
   margin-left: 22px;
-  div {
-    border: 1px solid #d4d4d4;
+  button {
+    border: 1px solid #d5d5d5;
     padding: 4px 6px;
     border-radius: 6px;
-    color: #d4d4d4;
+    color: #dbdbdb;
+    background-color: #fff;
   }
 `;
 
@@ -208,18 +373,19 @@ const CreateHabits = styled.div`
   width: 320px;
   height: 180px;
   background-color: #fff;
-  input {
-    width: 280px;
-    height: 45px;
-    border-radius: 5px;
-    border: 1px solid #d5d5d5;
-    margin-top: 10px;
-    margin-left: 20px;
-    ::placeholder {
-      color: #dbdbdb;
-      font-size: 20px;
-    }
-  }
+`;
+
+const Input = styled.input`
+  width: 280px;
+  height: 45px;
+  background-color: ${(props) => (props.enable ? "#D4D4D4" : "#FFFFFF")}
+  border-radius: 5px;
+  border: 1px solid #d5d5d5;
+  margin-top: 10px;
+  margin-left: 20px;
+  ::placeholder {
+    color: #dbdbdb;
+    font-size: 20px;
 `;
 
 const Buttons = styled.div`
@@ -228,22 +394,24 @@ const Buttons = styled.div`
   margin-top: 20px;
   margin-right: 22px;
   gap: 10px;
+`;
 
-  .button-save {
-    padding: 10px 20px;
-    background-color: #52b6ff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+const ButtonSave = styled.button`
+  padding: 10px 20px;
+  background-color: #52b6ff;
+  opacity: ${(props) => (props.enable ? 1 : 0.7)};
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+`;
 
-  .button-cancel {
-    background-color: #fff;
-    color: #52b6ff;
-    border: none;
-    cursor: pointer;
-  }
+const ButtonCancel = styled.button`
+  opacity: ${(props) => (props.enable ? 1 : 0.7)};
+  background-color: #fff;
+  color: #52b6ff;
+  border: none;
+  cursor: pointer;
 `;
 
 const Habits = styled.div`
@@ -266,10 +434,10 @@ const Habits = styled.div`
   }
 `;
 
-const Footer = styled.footer`
+const Footer = styled.div`
   @media (max-width: 600px) {
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
     position: fixed;
     bottom: 0;
@@ -278,22 +446,20 @@ const Footer = styled.footer`
     height: 70px;
     background-color: #fff;
     color: #52b6ff;
+
+    div {
+      width: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .progressBar {
+      margin-bottom: 50px;
+    }
   }
 `;
 
 const Paragraph2 = styled.a`
   display: inline-block;
   color: #52b6ff;
-`;
-
-const ProgressBar = styled.div`
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  bottom: 25px;
-  left: 150px;
-  padding: 20px;
-  border-radius: 50%;
-  background-color: #52b6ff;
-  color: #fff;
 `;
