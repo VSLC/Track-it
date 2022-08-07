@@ -5,10 +5,11 @@ import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import UserContext from "../Context/UserContext";
+import UserContext from "../contexts/ContextUser";
 
 const LoginScreen = () => {
-  const [token, setToken] = useState("");
+  const [image, setImage] = useState("");
+  const [token, setToken] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [enable, setEnable] = useState(true);
@@ -28,17 +29,20 @@ const LoginScreen = () => {
     );
 
     promise.then((response) => {
-      console.log(response.data);
       setToken(response.data.token);
+      setImage(response.data.image);
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("image", response.data.image);
       navigate("/hoje");
     });
     promise.catch((error) => {
       setEnable(true);
       console.log(error);
-      alert("Email ou senha errados.");
+      alert(error.response.data.message);
     });
   };
 
+  console.log(image)
   const Loading = () => {
     if (enable) {
       return (
@@ -57,7 +61,7 @@ const LoginScreen = () => {
 
   return (
     <>
-      <UserContext.Provider value = {{token}}>
+      <UserContext.Provider value={token}>
         <Container>
           <Img src={logo} />
           <Form>

@@ -20,13 +20,15 @@ const HabitUnit = ({
   return (
     <HabitsUnit>
       <div className="habits-class">
-        <h4>{name}</h4>
-        <p>
-          Sequência atual:
-          <HabitDayCheck done={done} className="ActualCount">
-            {currentSequence} dias
-          </HabitDayCheck>
-        </p>
+        <HabitPresentation>
+          <h4>{name}</h4>
+          <p>
+            Sequência atual:
+            <HabitDayCheck done={done} className="ActualCount">
+              {currentSequence} dias
+            </HabitDayCheck>
+          </p>
+        </HabitPresentation>
 
         <p>
           Seu recorde:{" "}
@@ -51,18 +53,16 @@ const HabitUnit = ({
 };
 
 const TodayScreen = () => {
-  const image = localStorage.getItem("image");
-  const token = localStorage.getItem("token");
+  const [image,setImage] = useState(localStorage.getItem("image"));
+  const [token,setToken] = useState(localStorage.getItem("token"));
   const [enable, setEnable] = useState(false);
   const isoWeek = require("dayjs/plugin/isoWeek");
   dayjs.extend(isoWeek);
-  const dayIso = dayjs().isoWeekday();
-  const dayOfMonth = dayjs().date();
-  const month = dayjs().month() + 1;
+  const [dayIso,setDayIso] = useState(dayjs().isoWeekday());
+  const [dayOfMonth,setDayofMonth] = useState(dayjs().date());
+  const [month,setMonth] = useState(dayjs().month() + 1);
   const [todayHabit, setTodayHabit] = useState([]);
-  let totalHabitsChecked = todayHabit.filter(
-    (element) => element.done === true
-  );
+  
 
   const dayOfWeek = (day) => {
     switch (day) {
@@ -116,7 +116,7 @@ const TodayScreen = () => {
       setTodayHabit(response.data);
       localStorage.setItem("todayHabit", response.data);
     });
-  }, [totalHabitsChecked]);
+  }, [todayHabit]);
 
   console.log(todayHabit);
 
@@ -330,15 +330,19 @@ const HabitsUnit = styled.div`
     font-size: 12px;
   }
 
-  h4 {
-    margin: 10px 0;
-    font-size: 18px;
-    color: #666666;
-    margin-left: 10px;
-  }
-
   .green-text {
     color: #8fc549;
+  }
+`;
+
+const HabitPresentation = styled.div`
+  margin-top: -10px;
+  h4 {
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #666666;
+    margin-left: 10px;
   }
 `;
 

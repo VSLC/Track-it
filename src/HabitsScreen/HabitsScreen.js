@@ -18,9 +18,11 @@ const HabitsScreen = () => {
   const [habit, setHabit] = useState("");
   const [enable, setEnable] = useState(true);
   const [newHabits, setNewHabits] = useState([]);
-  const token = localStorage.getItem("token");
-  const image = localStorage.getItem("image");
-  const percentage = localStorage.getItem("percentage");
+  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [image, setImage] = useState(localStorage.getItem("image"));
+  const [percentage, setPercentage] = useState(
+    localStorage.getItem("percentage")
+  );
 
   const showCreateHabit = () => {
     setCreateHabit(true);

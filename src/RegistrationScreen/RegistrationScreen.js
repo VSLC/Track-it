@@ -29,7 +29,6 @@ const RegistrationScreen = () => {
     );
     promise.then((response) => {
       navigate("/");
-      console.log(object);
     });
     promise.catch((error) => {
       setEnable(true);
@@ -52,7 +51,7 @@ const RegistrationScreen = () => {
   return (
     <>
       <Container>
-        <Img src={logo} alt="logo" />
+        <Img src={logo}/>
         <Form onSubmit={handleSubmit}>
           {enable ? (
             <Input
