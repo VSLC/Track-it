@@ -20,6 +20,7 @@ const HabitsScreen = () => {
   const [newHabits, setNewHabits] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [image, setImage] = useState(localStorage.getItem("image"));
+  const [arrayDays,setArrayDays] = useState([])
   const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
   );
@@ -31,8 +32,13 @@ const HabitsScreen = () => {
     setCreateHabit(false);
   };
 
-  const saveDay = () => {
-    console.log("Save day!");
+  const saveDay = (day) => {
+    if (arrayDays.includes(day)){
+      setArrayDays(arrayDays.filter((d)=> d!== day))
+    }
+    else {
+      setArrayDays([...arrayDays,day])
+    }
   };
 
   const UserHabit = ({ name, id }) => {
@@ -42,7 +48,7 @@ const HabitsScreen = () => {
           <p>{name}</p>
           <Days>
             {days.map((element) => (
-              <button onClick={saveDay}>{element}</button>
+              <button>{element}</button>
             ))}
           </Days>
           <ion-icon
