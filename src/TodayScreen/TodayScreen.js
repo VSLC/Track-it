@@ -54,7 +54,7 @@ const HabitUnit = ({
 };
 
 const TodayScreen = () => {
-  const { token2 } = useContext(UserContext);
+  const { token2,percentage2,setPercentage2 } = useContext(UserContext);
   const [image, setImage] = useState(localStorage.getItem("image"));
   //const [token, setToken] = useState(localStorage.getItem("token"));
   //Inutilizado com context api
@@ -65,8 +65,6 @@ const TodayScreen = () => {
   const [dayOfMonth, setDayofMonth] = useState(dayjs().date());
   const [month, setMonth] = useState(dayjs().month() + 1);
   const [todayHabit, setTodayHabit] = useState([]);
-
-  console.log("context token tela today"+ token2)
 
   const dayOfWeek = (day) => {
     switch (day) {
@@ -107,6 +105,7 @@ const TodayScreen = () => {
   const percentage = localStorage.setItem("percentage", handleMessage());
 
   useEffect(() => {
+    setPercentage(handleMessage)
     const config = {
       headers: {
         Authorization: `Bearer ${token2}`,
@@ -210,7 +209,7 @@ const TodayScreen = () => {
               <div className="progressBar" style={{ width: 100, height: 100 }}>
                 <CircularProgressbar
                   color="white"
-                  value={handleMessage()}
+                  value={percentage2}
                   text="Hoje"
                   background
                   backgroundPadding={6}

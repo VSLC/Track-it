@@ -11,7 +11,7 @@ import axios from "axios";
 
 const HabitsScreen = () => {
   const days = ["D", "S", "T", "Q", "Q", "S", "S"];
-  const { token2 } = useContext(UserContext);
+  const { token2, percentage2, setPercentage2 } = useContext(UserContext);
 
   const [createHabit, setCreateHabit] = useState(false);
   const [text, setText] = useState(false);
@@ -21,11 +21,11 @@ const HabitsScreen = () => {
   //const [token, setToken] = useState(localStorage.getItem("token"));//Inutilizado com context api
   const [image, setImage] = useState(localStorage.getItem("image"));
   const [arrayDays, setArrayDays] = useState([]);
-  const [percentage, setPercentage] = useState(
+  /*const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
-  );
+  ); Progresso do usuário feito com localStorage*/
 
-  console.log(token2)
+  console.log(token2);
 
   const showCreateHabit = () => {
     setCreateHabit(true);
@@ -42,20 +42,13 @@ const HabitsScreen = () => {
           {enable ? (
             <Days1>
               {days.map((element, index) => (
-                <ButtonDays2
-                  key={index}
-                >
-                  {element}
-                </ButtonDays2>
+                <ButtonDays2 key={index}>{element}</ButtonDays2>
               ))}
             </Days1>
           ) : (
             <Days1>
               {days.map((element, index) => (
-                <ButtonDays2
-                  key={index}
-                  disabled
-                >
+                <ButtonDays2 key={index} disabled>
                   {element}
                 </ButtonDays2>
               ))}
@@ -292,7 +285,7 @@ const HabitsScreen = () => {
                   color="white"
                   text="Hoje"
                   background
-                  value={percentage}
+                  value={percentage2}
                   backgroundPadding={6}
                   styles={buildStyles({
                     pathTransitionDuration: 0.5,

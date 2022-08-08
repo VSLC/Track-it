@@ -2,14 +2,16 @@ import Trackitlogo from "../Assets/trackitlogo.png";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import { useState } from "react";
+import UserContex from "../contexts/UserContext"
+import { useState,useContext } from "react";
 import "react-circular-progressbar/dist/styles.css";
 
 const HistoryScreen = () => {
+  const {token2,percentage2,setPercentage2}
   const [image, setImage] = useState(localStorage.getItem("image"));
-  const [percentage, setPercentage] = useState(
+  /*const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
-  );
+  ); Progresso do usuário feito com local storage*/
   console.log(image);
   return (
     <>
@@ -32,7 +34,7 @@ const HistoryScreen = () => {
                 <CircularProgressbar
                   color="white"
                   text="Hoje"
-                  value={percentage}
+                  value={percentage2}
                   background
                   backgroundPadding={6}
                   styles={buildStyles({
