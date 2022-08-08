@@ -20,7 +20,7 @@ const HabitsScreen = () => {
   const [newHabits, setNewHabits] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [image, setImage] = useState(localStorage.getItem("image"));
-  const [arrayDays,setArrayDays] = useState([])
+  const [arrayDays, setArrayDays] = useState([]);
   const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
   );
@@ -32,25 +32,34 @@ const HabitsScreen = () => {
     setCreateHabit(false);
   };
 
-  const saveDay = (day) => {
-    if (arrayDays.includes(day)){
-      setArrayDays(arrayDays.filter((d)=> d!== day))
-    }
-    else {
-      setArrayDays([...arrayDays,day])
-    }
-  };
-
   const UserHabit = ({ name, id }) => {
     return (
       <>
         <Habits>
           <p>{name}</p>
-          <Days>
-            {days.map((element) => (
-              <button>{element}</button>
-            ))}
-          </Days>
+          {enable ? (
+            <Days1>
+              {days.map((element, index) => (
+                <ButtonDays2
+                  key={index}
+                >
+                  {element}
+                </ButtonDays2>
+              ))}
+            </Days1>
+          ) : (
+            <Days1>
+              {days.map((element, index) => (
+                <ButtonDays2
+                  key={index}
+                  disabled
+                >
+                  {element}
+                </ButtonDays2>
+              ))}
+            </Days1>
+          )}
+
           <ion-icon
             name="trash-outline"
             onClick={() => {
@@ -62,6 +71,16 @@ const HabitsScreen = () => {
       </>
     );
   };
+
+  const saveDay = (day) => {
+    if (arrayDays.includes(day)) {
+      setArrayDays(arrayDays.filter((d) => d !== day));
+    } else {
+      setArrayDays([...arrayDays, day]);
+    }
+  };
+
+  console.log(newHabits);
 
   const loadData = () => {
     const config = {
@@ -89,7 +108,7 @@ const HabitsScreen = () => {
     };
     const object = {
       name: habit,
-      days: [0, 1, 2, 3, 4, 5, 6],
+      days: arrayDays,
     };
     const promise = axios.post(
       "https://mock-api.bootcamp.respondeai.com.br/api/v2/trackit/habits",
@@ -97,8 +116,9 @@ const HabitsScreen = () => {
       config
     );
     promise.then((response) => {
+      setArrayDays([]);
+      setHabit("");
       setEnable(true);
-      console.log(response.data);
       setCreateHabit(false);
     });
     promise.catch((error) => {
@@ -166,7 +186,6 @@ const HabitsScreen = () => {
       );
     }
   };
-  console.log(newHabits);
   return (
     <>
       <Container>
@@ -206,11 +225,22 @@ const HabitsScreen = () => {
                 />
               )}
 
-              <Days>
-                {days.map((element) => (
-                  <button onClick={saveDay}>{element}</button>
+              <Days1>
+                {days.map((element, index) => (
+                  <ButtonDays
+                    key={index}
+                    backgroundColor={
+                      arrayDays.includes(index) ? "#cfcfcf" : "#fff"
+                    }
+                    color={arrayDays.includes(index) ? "#fff" : "#cfcfcf"}
+                    onClick={() => {
+                      saveDay(index);
+                    }}
+                  >
+                    {element}
+                  </ButtonDays>
                 ))}
-              </Days>
+              </Days1>
               <Buttons>
                 {enable ? (
                   <ButtonCancel
@@ -358,19 +388,12 @@ const Paragraph = styled.p`
   padding: 0 20px;
 `;
 
-const Days = styled.div`
+const Days1 = styled.div`
   display: flex;
   gap: 10px;
   justify-content: flex-start;
   margin-top: 10px;
   margin-left: 22px;
-  button {
-    border: 1px solid #d5d5d5;
-    padding: 4px 6px;
-    border-radius: 6px;
-    color: #dbdbdb;
-    background-color: #fff;
-  }
 `;
 
 const CreateHabits = styled.div`
@@ -402,6 +425,20 @@ const Buttons = styled.div`
   margin-top: 20px;
   margin-right: 22px;
   gap: 10px;
+`;
+
+const ButtonDays = styled.button`
+  border: none;
+  padding: 5px 6px;
+  border-radius: 6px;
+  color: ${(props) => props.color};
+  background-color: ${(props) => props.backgroundColor};
+`;
+
+const ButtonDays2 = styled.button`
+  border: none;
+  padding: 5px 6px;
+  border-radius: 6px;
 `;
 
 const ButtonSave = styled.button`
