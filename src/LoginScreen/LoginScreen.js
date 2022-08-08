@@ -37,7 +37,6 @@ const LoginScreen = () => {
     });
     promise.catch((error) => {
       setEnable(true);
-      console.log(error);
       alert(error.response.data.message);
     });
   };
