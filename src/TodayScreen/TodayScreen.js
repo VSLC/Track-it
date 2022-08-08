@@ -54,7 +54,7 @@ const HabitUnit = ({
 };
 
 const TodayScreen = () => {
-  const { token2,percentage2,setPercentage2 } = useContext(UserContext);
+  const { token2, percentage2, setPercentage2 } = useContext(UserContext);
   const [image, setImage] = useState(localStorage.getItem("image"));
   //const [token, setToken] = useState(localStorage.getItem("token"));
   //Inutilizado com context api
@@ -102,10 +102,8 @@ const TodayScreen = () => {
     return percentage;
   };
 
-  const percentage = localStorage.setItem("percentage", handleMessage());
-
   useEffect(() => {
-    setPercentage(handleMessage)
+    setPercentage2(handleMessage);
     const config = {
       headers: {
         Authorization: `Bearer ${token2}`,

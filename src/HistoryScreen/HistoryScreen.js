@@ -7,12 +7,12 @@ import { useState,useContext } from "react";
 import "react-circular-progressbar/dist/styles.css";
 
 const HistoryScreen = () => {
-  const {token2,percentage2,setPercentage2}=useContext(UserContext);
+  const {token2,percentage2,setPercentage2} = useContext(UserContext);
   const [image, setImage] = useState(localStorage.getItem("image"));
   /*const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
   ); Progresso do usuário feito com local storage*/
-  console.log(image);
+
   return (
     <>
       <Container>
