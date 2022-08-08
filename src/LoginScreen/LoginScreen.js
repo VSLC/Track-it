@@ -2,14 +2,15 @@ import styled from "styled-components";
 import logo from "../Assets/logo.png";
 import { ThreeDots } from "react-loader-spinner";
 import { Link, Navigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../contexts/UserContext";
 
 const LoginScreen = () => {
   const [image, setImage] = useState("");
-  const [token, setToken] = useState();
+  const {token2,percentage2,setPercentage2,setToken2} = useContext(UserContext)
+  //const [token, setToken] = useState();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [enable, setEnable] = useState(true);
@@ -31,7 +32,7 @@ const LoginScreen = () => {
     );
 
     promise.then((response) => {
-      setToken(response.data.token);
+      setToken2(response.data.token);
       setImage(response.data.image);
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("image", response.data.image);
@@ -62,7 +63,6 @@ const LoginScreen = () => {
 
   return (
     <>
-      <UserContext.Provider value={token}>
         <Container>
           <Img src={logo} />
           <Form>
@@ -112,7 +112,6 @@ const LoginScreen = () => {
             <Register>Não tem uma conta? Cadastre-se!</Register>
           </Link>
         </Container>
-      </UserContext.Provider>
     </>
   );
 };

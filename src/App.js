@@ -12,13 +12,13 @@ import { PersonPlus } from "styled-icons/bootstrap";
 
 const App = () => {
   // Component Logic
-  const [token2, setToken] = useState(localStorage.getItem("token"));
+  const [token2, setToken2] = useState(localStorage.getItem("token"));
   const [percentage2,setPercentage2] = useState(0);
   //Compoent ui
   return (
     <>
       <BrowserRouter>
-        <UserContext.Provider value={{ token2,percentage2,setPercentage2 }}>
+        <UserContext.Provider value={{ token2,percentage2,setPercentage2,setToken2 }}>
           <GlobalStyle />
           <Routes>
             <Route path="/" element={<LoginScreen />} />
