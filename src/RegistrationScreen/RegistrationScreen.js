@@ -32,7 +32,7 @@ const RegistrationScreen = () => {
     });
     promise.catch((error) => {
       setEnable(true);
-      alert("Requisição falhou. Preencha os campos corretamente.");
+      alert(error.response.data.message);
     });
   };
 
