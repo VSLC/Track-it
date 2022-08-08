@@ -1,7 +1,8 @@
 import Trackitlogo from "../Assets/trackitlogo.png";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import UserContext from "../contexts/UserContext";
 import axios from "axios";
 import dayjs from "dayjs";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
@@ -53,8 +54,10 @@ const HabitUnit = ({
 };
 
 const TodayScreen = () => {
+  const { token2 } = useContext(UserContext);
   const [image, setImage] = useState(localStorage.getItem("image"));
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  //const [token, setToken] = useState(localStorage.getItem("token"));
+  //Inutilizado com context api
   const [enable, setEnable] = useState(false);
   const isoWeek = require("dayjs/plugin/isoWeek");
   dayjs.extend(isoWeek);
@@ -62,6 +65,8 @@ const TodayScreen = () => {
   const [dayOfMonth, setDayofMonth] = useState(dayjs().date());
   const [month, setMonth] = useState(dayjs().month() + 1);
   const [todayHabit, setTodayHabit] = useState([]);
+
+  console.log("context token tela today"+ token2)
 
   const dayOfWeek = (day) => {
     switch (day) {
@@ -104,7 +109,7 @@ const TodayScreen = () => {
   useEffect(() => {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     const promise = axios.get(
@@ -122,7 +127,7 @@ const TodayScreen = () => {
   const handleCheck = (id) => {
     const config2 = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     const promise = axios.post(
@@ -143,7 +148,7 @@ const TodayScreen = () => {
   const handleUncheck = (id) => {
     const config2 = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     const promise = axios.post(

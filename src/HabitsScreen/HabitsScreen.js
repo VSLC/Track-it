@@ -3,7 +3,7 @@ import Trackitlogo from "../Assets/trackitlogo.png";
 import { ThreeDots } from "react-loader-spinner";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useContext } from "react";
-import UserContext from "../contexts/ContextUser";
+import UserContext from "../contexts/UserContext";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
@@ -18,12 +18,14 @@ const HabitsScreen = () => {
   const [habit, setHabit] = useState("");
   const [enable, setEnable] = useState(true);
   const [newHabits, setNewHabits] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  //const [token, setToken] = useState(localStorage.getItem("token"));//Inutilizado com context api
   const [image, setImage] = useState(localStorage.getItem("image"));
   const [arrayDays, setArrayDays] = useState([]);
   const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
   );
+
+  console.log(token2)
 
   const showCreateHabit = () => {
     setCreateHabit(true);
@@ -85,7 +87,7 @@ const HabitsScreen = () => {
   const loadData = () => {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
 
@@ -103,7 +105,7 @@ const HabitsScreen = () => {
     setEnable(false);
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     const object = {
@@ -130,7 +132,7 @@ const HabitsScreen = () => {
   const getHabits = () => {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     const promise = axios.get(
@@ -153,7 +155,7 @@ const HabitsScreen = () => {
   const deleteHabit = (id) => {
     const config = {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token2}`,
       },
     };
     if (window.confirm("Deseja deletar o hábito ?")) {

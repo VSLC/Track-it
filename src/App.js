@@ -6,18 +6,18 @@ import HistoryScreen from "./HistoryScreen/HistoryScreen";
 import TodayScreen from "./TodayScreen/TodayScreen";
 
 import { useState } from "react";
-import ContextUser from "./contexts/ContextUser";
+import UserContext from "./contexts/UserContext";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { PersonPlus } from "styled-icons/bootstrap";
 
 const App = () => {
   // Component Logic
-  const [token, setToken] = useState(localStorage.getItem("token"));
+  const [token2, setToken] = useState(localStorage.getItem("token"));
   //Compoent ui
   return (
     <>
       <BrowserRouter>
-        <ContextUser.Provider value={token}>
+        <UserContext.Provider value={{ token2 }}>
           <GlobalStyle />
           <Routes>
             <Route path="/" element={<LoginScreen />} />
@@ -26,7 +26,7 @@ const App = () => {
             <Route path="/historico" element={<HistoryScreen />} />
             <Route path="/hoje" element={<TodayScreen />} />
           </Routes>
-        </ContextUser.Provider>
+        </UserContext.Provider>
       </BrowserRouter>
     </>
   );
