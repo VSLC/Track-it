@@ -2,12 +2,12 @@ import Trackitlogo from "../Assets/trackitlogo.png";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
-import UserContex from "../contexts/UserContext"
+import UserContext from "../contexts/UserContext"
 import { useState,useContext } from "react";
 import "react-circular-progressbar/dist/styles.css";
 
 const HistoryScreen = () => {
-  const {token2,percentage2,setPercentage2}
+  const {token2,percentage2,setPercentage2}=useContext(UserContext);
   const [image, setImage] = useState(localStorage.getItem("image"));
   /*const [percentage, setPercentage] = useState(
     localStorage.getItem("percentage")
