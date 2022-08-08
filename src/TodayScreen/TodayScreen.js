@@ -53,16 +53,15 @@ const HabitUnit = ({
 };
 
 const TodayScreen = () => {
-  const [image,setImage] = useState(localStorage.getItem("image"));
-  const [token,setToken] = useState(localStorage.getItem("token"));
+  const [image, setImage] = useState(localStorage.getItem("image"));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   const [enable, setEnable] = useState(false);
   const isoWeek = require("dayjs/plugin/isoWeek");
   dayjs.extend(isoWeek);
-  const [dayIso,setDayIso] = useState(dayjs().isoWeekday());
-  const [dayOfMonth,setDayofMonth] = useState(dayjs().date());
-  const [month,setMonth] = useState(dayjs().month() + 1);
+  const [dayIso, setDayIso] = useState(dayjs().isoWeekday());
+  const [dayOfMonth, setDayofMonth] = useState(dayjs().date());
+  const [month, setMonth] = useState(dayjs().month() + 1);
   const [todayHabit, setTodayHabit] = useState([]);
-  
 
   const dayOfWeek = (day) => {
     switch (day) {
@@ -262,8 +261,8 @@ const Header = styled.div`
     }
     .personalImage {
       width: 80px;
-      height: 60px;
-      border-radius: 50px;
+      height: 50px;
+      border-radius: 50%;
     }
   }
 `;

@@ -344,8 +344,8 @@ const Header = styled.div`
 
     .personalImage {
       width: 80px;
-      height: 60px;
-      border-radius: 100px;
+      height: 50px;
+      border-radius: 50%;
     }
   }
 `;
