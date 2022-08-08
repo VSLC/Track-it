@@ -289,7 +289,7 @@ const Today = styled.div`
       color: #bababa;
       font-size: 18px;
     }
-    today21 {
+    .today21 {
       color: #8fc549;
       font-size: 18px;
     }
